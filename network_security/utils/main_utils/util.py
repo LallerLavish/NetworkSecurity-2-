@@ -26,3 +26,21 @@ def write_yaml_file(file_path:str,content:object,replace:bool):
     except Exception as e:
         raise NetworkSecurityException(e,sys)
     
+def nump_to_file(file_path:str,array:np.ndarray):
+    try:
+        os.makedirs(os.path.dirname(file_path),exist_ok=True)
+        with open(file_path,"wb") as file:
+            np.save(file,array)
+        logging.info("File is saved")
+    except Exception as e:
+        raise NetworkSecurityException(e,sys)
+    
+def save_object(file_path:str,obj):
+    try:
+        os.makedirs(os.path.dirname(file_path),exist_ok=True)
+        with open(file_path,'wb') as file:
+            pickle.dump(obj,file)
+        logging.info("Object(Preprocessor) is Saved")
+
+    except Exception as e:
+        raise NetworkSecurityException(e,sys)

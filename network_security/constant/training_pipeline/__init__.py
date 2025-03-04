@@ -15,6 +15,7 @@ Data_file_name="phisingData.csv"
 Test_file_name="test.csv"
 Train_file_name="train.csv"
 SCHEMA_FILE_PATH="data_schema/schema.yaml"
+PREPROCESSOR_FILE_NAME="preprocessor.pkl"
 
 """
 Data Ingestion Related Constant
@@ -36,3 +37,15 @@ Data_Validation_valid_dir:str="Valid"
 Data_Validation_invalid_dir:str="Invalid"
 Data_Validation_drift_report_dir:str="Drift_Report"
 Data_Validation_drift_report_name:str="report.yaml"
+
+"""
+Data Transformation Related Constants
+"""
+
+Data_Transformation_dir_name:str="Data_Transformer"
+# KNN Imputer
+Data_NAN_Replacer_params:dict={
+    'missing_values':np.nan,
+    'n-_neighbors':3,
+    'weights':'uniform'
+}

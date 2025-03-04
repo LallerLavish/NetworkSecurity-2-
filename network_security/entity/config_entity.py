@@ -28,7 +28,6 @@ class Data_Ingestion_Configuration:
         self.collection=training_pipeline.Data_Ingestion_Collection_name
         self.database=training_pipeline.Data_Ingestion_Database
 
-
 class Data_Validation_Configuration:
     def __init__(self,train_pip_confi=Training_Pipeline_Config):
         self.data_valid_dir=os.path.join(train_pip_confi.artifact_path,
@@ -44,3 +43,11 @@ class Data_Validation_Configuration:
         self.drift_report_file_path=os.path.join(self.data_valid_dir,
                                                  training_pipeline.Data_Validation_drift_report_dir,
                                                  training_pipeline.Data_Validation_drift_report_name)
+
+class Data_Transformation_Configuration:
+    def __init__(self,tpc:Training_Pipeline_Config):
+        self.train_pip_confi=tpc
+        self.data_transformer=os.path.join(self.train_pip_confi.artifact_path,training_pipeline.Data_Transformation_dir_name)
+        self.data_trans_train=os.path.join(self.data_transformer,training_pipeline.Train_file_name.replace("csv","npy"))
+        self.data_trans_test=os.path.join(self.data_transformer,training_pipeline.Test_file_name.replace("csv","npy"))
+        self.data_transformer_obj=os.path.join(self.data_transformer,training_pipeline.PREPROCESSOR_FILE_NAME)
