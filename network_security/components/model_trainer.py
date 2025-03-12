@@ -8,6 +8,8 @@ from network_security.utils.ml_utils.metric.classification_metric import get_cla
 from network_security.utils.ml_utils.model.estimator import NetworkModel
 from sklearn.model_selection import GridSearchCV
 import mlflow
+import dagshub
+dagshub.init(repo_owner='LallerLavish', repo_name='my-first-repo', mlflow=True)
 
 import pandas as pd
 import numpy as np
