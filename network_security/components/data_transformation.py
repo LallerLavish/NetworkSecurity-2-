@@ -62,6 +62,8 @@ class DataTransformation:
             test_arr=np.c_[test_tr,np.array(test_target)]
 
             save_object(self.transform_config.data_transformer_obj,preprocessor)
+            save_object('final_models/preprocessor.pkl',preprocessor)
+            
             nump_to_file(self.transform_config.data_trans_train,train_arr)
             nump_to_file(self.transform_config.data_trans_test,test_arr)
 

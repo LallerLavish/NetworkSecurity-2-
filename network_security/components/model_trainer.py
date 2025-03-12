@@ -65,6 +65,9 @@ class ModelTrainer:
 
             os.makedirs(os.path.dirname(self.model_config.model_file_path),exist_ok=True)
             save_object(self.model_config.model_file_path,best_model)
+
+            save_object('final_models/model.pkl',best_model)
+            
             print(get_classification_report(y_test,best_model.predict(X_test)))
             self.track_flow(best_model,get_classification_report(y_test,best_model.predict(X_test)))
             self.track_flow(best_model,get_classification_report(y,best_model.predict(X)))
