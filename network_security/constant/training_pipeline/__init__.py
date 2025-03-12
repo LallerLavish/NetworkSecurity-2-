@@ -100,3 +100,4 @@ Model_Trainer_dir_name:str="Model_Trainer"
 Model_Expected_Accuracy:float=0.6
 Model_underfitting_overfitting_threshold=0.05
 
+Training_Bucket_Name="lavishnetworksecurity"
