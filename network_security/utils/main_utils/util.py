@@ -40,7 +40,21 @@ def save_object(file_path:str,obj):
         os.makedirs(os.path.dirname(file_path),exist_ok=True)
         with open(file_path,'wb') as file:
             pickle.dump(obj,file)
-        logging.info("Object(Preprocessor) is Saved")
+        logging.info("Object(Preprocessor or Model) is Saved")
 
+    except Exception as e:
+        raise NetworkSecurityException(e,sys)
+    
+def load_object(file_path):
+    try:
+        with open(file_path,'rb') as obj:
+            return pickle.load(obj)
+    except Exception as e:
+        raise NetworkSecurityException(e,sys)
+    
+def load_numpy_file(file_path:str):
+    try:
+        with open(file_path,'rb') as file_obj:
+            return np.load(file_obj,allow_pickle=True)
     except Exception as e:
         raise NetworkSecurityException(e,sys)

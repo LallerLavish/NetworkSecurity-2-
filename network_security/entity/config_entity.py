@@ -51,3 +51,12 @@ class Data_Transformation_Configuration:
         self.data_trans_train=os.path.join(self.data_transformer,training_pipeline.Train_file_name.replace("csv","npy"))
         self.data_trans_test=os.path.join(self.data_transformer,training_pipeline.Test_file_name.replace("csv","npy"))
         self.data_transformer_obj=os.path.join(self.data_transformer,training_pipeline.PREPROCESSOR_FILE_NAME)
+
+class Model_Training_Configuration:
+    def __init__(self,train_pip_confi:Training_Pipeline_Config):
+        self.train_pip_config=train_pip_confi
+        self.model_train_dir_path=os.path.join(self.train_pip_config.artifact_path,
+                                               training_pipeline.Model_Trainer_dir_name)
+        self.model_file_path=os.path.join(self.model_train_dir_path,training_pipeline.MODEL_FILE_NAME)
+        self.expected_accuracy:float=training_pipeline.Model_Expected_Accuracy
+        self.model_under_overfitted_threshold=training_pipeline.Model_underfitting_overfitting_threshold

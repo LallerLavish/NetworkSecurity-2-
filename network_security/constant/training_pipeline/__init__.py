@@ -2,7 +2,11 @@ import os
 import sys
 import pandas as pd
 import numpy as np
-
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import GradientBoostingClassifier
 
 """
 defining common constants for pipeline
@@ -16,6 +20,44 @@ Test_file_name="test.csv"
 Train_file_name="train.csv"
 SCHEMA_FILE_PATH="data_schema/schema.yaml"
 PREPROCESSOR_FILE_NAME="preprocessor.pkl"
+MODEL_FILE_NAME="model.pkl"
+models:dict={
+    
+    'DecisionTree':DecisionTreeClassifier(),
+    'RandomForest':RandomForestClassifier(verbose=0),
+    'Gradient':GradientBoostingClassifier(verbose=0),
+    'Logistic':LogisticRegression(verbose=0),
+    'AdaBoost':AdaBoostClassifier()
+    
+}
+
+params:dict={
+            "Decision Tree": {
+                'criterion':['gini', 'entropy', 'log_loss'],
+                # 'splitter':['best','random'],
+                # 'max_features':['sqrt','log2'],
+            },
+            "Random Forest":{
+                # 'criterion':['gini', 'entropy', 'log_loss'],
+                
+                # 'max_features':['sqrt','log2',None],
+                'n_estimators': [8,16,32,128,256]
+            },
+            "Gradient Boosting":{
+                # 'loss':['log_loss', 'exponential'],
+                'learning_rate':[.1,.01,.05,.001],
+                'subsample':[0.6,0.7,0.75,0.85,0.9],
+                # 'criterion':['squared_error', 'friedman_mse'],
+                # 'max_features':['auto','sqrt','log2'],
+                'n_estimators': [8,16,32,64,128,256]
+            },
+            "Logistic Regression":{},
+            "AdaBoost":{
+                'learning_rate':[.1,.01,.001],
+                'n_estimators': [8,16,32,64,128,256]
+            }
+            
+        }
 
 """
 Data Ingestion Related Constant
@@ -49,3 +91,12 @@ Data_NAN_Replacer_params:dict={
     'n-_neighbors':3,
     'weights':'uniform'
 }
+
+"""
+Model Trainer Related Constants
+"""
+
+Model_Trainer_dir_name:str="Model_Trainer"
+Model_Expected_Accuracy:float=0.6
+Model_underfitting_overfitting_threshold=0.05
+
