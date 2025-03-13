@@ -28,62 +28,65 @@ jobs:
             - name: Checkout Code
               uses: actions/checkout@v3
             
-            - name: Install Utilities
+            - name: Install Utilities (macOS)
               run: |
-                sudo apt-get update
-                sudo apt-get install -y jq unzip 
-            
+                brew update
+                brew install jq awscli
+
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v1
-
               with:
-                aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
-                aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-                aws-region: ${{secrets.AWS_REGION}}
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                aws-region: ${{ secrets.AWS_REGION }}
+
             - name: Login to AWS ECR
               id: login-ecr
               uses: aws-actions/amazon-ecr-login@v1
 
-            - name: Build,tag,and push image to Amazon ECR
-              id: build-image
+            - name: Build, Tag, and Push Image to Amazon ECR
               env: 
-                ECR_REPOSITORY: ${{secrets.ECR_REPOSITORY_NAME}}
-                ECR_REGISTRY: ${{steps.login-ecr.outputs.registry}}
-                IMAGE_TAG: latest
+                ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
+                ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+                IMAGE_TAG: ${{ github.sha }}
               run: |
                 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
                 docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-                echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG "
+                echo "IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
 
-    Continuous-Deployment: 
+    continuous-deployment: 
         needs: build-and-push-ecr-image
         runs-on: self-hosted
         steps:
-            - name: Checkout
+            - name: Checkout Code
               uses: actions/checkout@v3
             
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v1
-
               with:
-                aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
-                aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-                aws-region: ${{secrets.AWS_REGION}}
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                aws-region: ${{ secrets.AWS_REGION }}
 
             - name: Login to AWS ECR
               id: login-ecr
               uses: aws-actions/amazon-ecr-login@v1
 
-            - name: Pull latest images
+            - name: Pull Latest Image
               run: |
-               docker pull ${{secrets.AWS_ECR_LOGIN_URI}}/${{secrets.ECR_REPOSITORY_NAME}}
+                docker pull ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.ECR_REPOSITORY_NAME }}:${{ github.sha }}
+
+            - name: Stop and Remove Previous Containers
+              run: |
+                docker ps -q | xargs -I {} docker rm -f {} || true
 
             - name: Run Docker Image
               run: |
-               docker run -d -p 8080:8080 --ipc="host" --name=mltest -e 'AWS_ACCESS_KEY_ID=${{secrets.AWS_ACCESS_KEY_ID}}' -e 'AWS_REGION=${{secrets.AWS_REGION}}' ${{secrets.AWS_ECR_LOGIN_URI}}/${{secrets.ECR_REPOSITORY_NAME}}:latest
+                docker run -d -p 8080:8080 --ipc="host" --name=mltest \
+                -e 'AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}' \
+                -e 'AWS_REGION=${{ secrets.AWS_REGION }}' \
+                ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.ECR_REPOSITORY_NAME }}:${{ github.sha }}
 
-            - name: Clean Previous Images and Containers
+            - name: Clean Docker Resources
               run: |
                 docker system prune -f
-
-
