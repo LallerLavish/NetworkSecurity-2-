@@ -9,43 +9,42 @@ on:
 jobs:
     integration:
         name: Continuous Integration
-        runs-on: macos-latest  # <-- Changed from ubuntu-latest to macos-latest
+        runs-on: macos-latest
         steps:
             - name: Checkout Code
               uses: actions/checkout@v3
 
             - name: Lint Code
               run: echo "Linting repository"
-
+            
             - name: Run unit tests
               run: echo "Running unit tests"
-
+    
     build-and-push-ecr-image: 
         name: Continuous Delivery
         needs: integration
-        runs-on: macos-latest  # <-- Changed from ubuntu-latest to macos-latest
+        runs-on: macos-latest
         steps:
             - name: Checkout Code
               uses: actions/checkout@v3
-
-            - name: Install AWS CLI and Dependencies
+            
+            - name: Install Utilities
               run: |
-                brew install awscli jq unzip docker  # Use Homebrew on macOS
-                colima start  # Starts a lightweight VM for Docker (if needed)
-                docker context use colima  # Ensures Docker works correctly on macOS
-
+                sudo apt-get update
+                sudo apt-get install -y jq unzip 
+            
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v1
+
               with:
                 aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
                 aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
                 aws-region: ${{secrets.AWS_REGION}}
-
             - name: Login to AWS ECR
               id: login-ecr
               uses: aws-actions/amazon-ecr-login@v1
 
-            - name: Build, tag, and push image to Amazon ECR
+            - name: Build,tag,and push image to Amazon ECR
               id: build-image
               env: 
                 ECR_REPOSITORY: ${{secrets.ECR_REPOSITORY_NAME}}
@@ -58,13 +57,14 @@ jobs:
 
     Continuous-Deployment: 
         needs: build-and-push-ecr-image
-        runs-on: self-hosted  # Assumes a macOS self-hosted runner
+        runs-on: self-hosted
         steps:
             - name: Checkout
               uses: actions/checkout@v3
-
+            
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v1
+
               with:
                 aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
                 aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
@@ -85,3 +85,5 @@ jobs:
             - name: Clean Previous Images and Containers
               run: |
                 docker system prune -f
+
+
