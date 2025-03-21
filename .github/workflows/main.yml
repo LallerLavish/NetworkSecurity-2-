@@ -14,6 +14,11 @@ jobs:
             - name: Checkout Code
               uses: actions/checkout@v3
 
+            - name: Install Dependencies (macOS)
+              run: |
+                brew update
+                brew install jq awscli
+
             - name: Lint Code
               run: echo "Linting repository"
             
@@ -28,10 +33,16 @@ jobs:
             - name: Checkout Code
               uses: actions/checkout@v3
             
-            - name: Install Utilities (macOS)
+            - name: Install Dependencies (macOS)
               run: |
                 brew update
-                brew install jq awscli
+                brew install jq awscli docker
+                brew install --cask docker  # Install Docker Desktop (GUI required)
+
+            - name: Start Docker Daemon (if needed)
+              run: |
+                open -a Docker || echo "Docker is already running"
+                sleep 15  # Wait for Docker to start
 
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v1
@@ -50,6 +61,7 @@ jobs:
                 ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
                 IMAGE_TAG: ${{ github.sha }}
               run: |
+                docker buildx create --use  # Enable BuildKit on macOS
                 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
                 docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
                 echo "IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
