@@ -1,16 +1,21 @@
-# ⚡ AlgoForge  
+# AlgoForge  
 
 <p align="center">
-  <!-- Build & Repo Stats -->
-  <img src="https://badgen.net/github/status/LallerLavish/AlgoForge" />
-  <img src="https://badgen.net/github/checks/LallerLavish/AlgoForge" />
-  <img src="https://badgen.net/github/last-commit/LallerLavish/AlgoForge" />
-  <img src="https://badgen.net/github/branches/LallerLavish/AlgoForge" />
-  <img src="https://badgen.net/github/stars/LallerLavish/AlgoForge" />
-  <img src="https://badgen.net/github/forks/LallerLavish/AlgoForge" />
-  <img src="https://badgen.net/github/contributors/LallerLavish/AlgoForge" />
-  <img src="https://badgen.net/github/issues/LallerLavish/AlgoForge" />
 
+[![Python](https://img.shields.io/badge/Python-3.9%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://react.dev/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-38B2AC?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![C++](https://img.shields.io/badge/C++-00599C?logo=cplusplus&logoColor=white)](https://isocpp.org/)
+[![Java](https://img.shields.io/badge/Java-007396?logo=java&logoColor=white)](https://www.java.com/)
+[![OpenAI GPT-4](https://img.shields.io/badge/OpenAI-GPT--4-412991?logo=openai&logoColor=white)](https://openai.com/)
+[![Google Gemini](https://img.shields.io/badge/Google-Gemini-4285F4?logo=google&logoColor=white)](https://deepmind.google/technologies/gemini/)
+[![AutoGen](https://img.shields.io/badge/AutoGen-Microsoft-0078D4?logo=microsoft&logoColor=white)](https://microsoft.github.io/autogen/)
+
+</p>
   <!-- Tech Stack Icons -->
   <br/><br/>
   <img src="https://skillicons.dev/icons?i=react,typescript,tailwind,fastapi,python,cpp,java,firebase,docker,git" />
@@ -74,3 +79,4 @@ It combines a modern **React frontend** with a **FastAPI backend**, orchestrated
 cd frontend
 npm install
 npm start
+
